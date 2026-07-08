@@ -23,7 +23,7 @@
 
 (deftest request-throws-on-non-2xx-transport-status
   (is (thrown-with-msg?
-       clojure.lang.ExceptionInfo
+       #?(:clj clojure.lang.ExceptionInfo :cljs js/Error)
        #"Vultr API request failed"
        (client/request! "/account" {:http-fn (stub-http-fn 401 "{\"error\":\"denied\"}") :token "t"}))))
 
@@ -32,6 +32,6 @@
 
 (deftest api-key-fails-closed-without-env-or-explicit-token
   (is (thrown-with-msg?
-       clojure.lang.ExceptionInfo
+       #?(:clj clojure.lang.ExceptionInfo :cljs js/Error)
        #"VULTR_API_KEY is required"
        (client/request! "/account" {:http-fn (stub-http-fn 200 "{}")}))))
